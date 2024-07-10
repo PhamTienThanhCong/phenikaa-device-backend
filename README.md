@@ -4,6 +4,7 @@
 
 - Python > 3.10
 - Python package and environment management.
+- Mysql 
 
 ### Local Development
 - Starting app
