@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from app.core.authorize import get_password_hash
+from app.services.auth.authorize import get_password_hash
 from app.services.users.user_schema import UserCreate
 from app.services.users.user_model import User
 
