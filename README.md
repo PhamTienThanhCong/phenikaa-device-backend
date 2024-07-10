@@ -5,7 +5,7 @@
 - Python > 3.10
 - Python package and environment management.
 
-## Local Development
+### Local Development
 - Starting app
 ```console
 $ fastapi dev app/main.py
