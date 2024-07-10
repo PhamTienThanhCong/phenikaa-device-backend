@@ -32,6 +32,8 @@ class UserService:
     if not db_user:
       raise HTTPException(status_code=404, detail="User not found")
     for key, value in user.dict().items():
+      if (key == "password"):
+        value = get_password_hash(value)
       setattr(db_user, key, value)
     db.commit()
     db.refresh(db_user)

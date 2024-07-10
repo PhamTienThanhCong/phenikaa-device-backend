@@ -1,7 +1,9 @@
+from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_db
+from app.services.auth.authorize import get_current_active_user
 from app.services.users.user_schema import UserBase, UserCreate, UserUpdate
 from app.services.users.user_service import UserService
 
@@ -36,5 +38,7 @@ def update_user(user_id: int, body: UserUpdate, db: Session = Depends(get_db)):
   return user_service.update_user(db, user_id, body)
 
 @router.delete("/{user_id}", response_model=UserBase)
-def delete_user(user_id: int, db: Session = Depends(get_db)):
+def delete_user(user_id: int, current_user: Annotated[UserBase, Depends(get_current_active_user)], db: Session = Depends(get_db)):
+  if current_user.role != 1:
+    raise HTTPException(status_code=401, detail="Unauthorized")
   return user_service.delete_user(db, user_id)
