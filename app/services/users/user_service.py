@@ -2,18 +2,23 @@ from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from app.services.auth.authorize import get_password_hash
 from app.services.profile.profile_schema import ProfileCreate
 from app.services.profile.profile_service import ProfileService
 from app.services.users.user_schema import UserCreate
 from app.services.users.user_model import User
+from app.utils.hash_password import get_password_hash
 
 class UserService:
   def __init__(self):
     self.profile = ProfileService()
   
   def get_user_by_email(self, db: Session, email: str):
-    return db.query(User).filter(User.email == email).first()
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+      return None
+    profile = self.profile.get_profile(db, user.id)
+    user.profile = profile
+    return user
 
   def create_user(self, db: Session, user: UserCreate):
     # hash password
@@ -48,7 +53,13 @@ class UserService:
      
 
   def get_user_by_id(self, db: Session, user_id: int):
-    return db.query(User).filter(User.id == user_id).first()
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+      raise HTTPException(status_code=404, detail="User not found")
+    
+    profile = self.profile.get_profile(db, user_id)
+    user.profile = profile
+    return user
   
   def update_user(self, db: Session, user_id: int, user: UserCreate):
     db_user = db.query(User).filter(User.id == user_id).first()

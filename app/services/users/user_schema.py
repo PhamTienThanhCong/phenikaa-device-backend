@@ -9,7 +9,7 @@ class UserBase(BaseModel):
   email: EmailStr | str
   role: USER_ROLE
   is_active: int
-  profile: ProfileBase
+  profile: ProfileBase | None
   class Config:
     use_enum_values = True
 
