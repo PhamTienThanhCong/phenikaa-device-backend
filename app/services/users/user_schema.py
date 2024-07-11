@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr
 
 from app.enums.user_role import USER_ROLE
+from app.services.profile.profile_schema import ProfileBase, ProfileCreate
 
 class UserBase(BaseModel):
   id: int
@@ -8,6 +9,7 @@ class UserBase(BaseModel):
   email: EmailStr | str
   role: USER_ROLE
   is_active: int
+  profile: ProfileBase
   class Config:
     use_enum_values = True
 
@@ -16,6 +18,7 @@ class UserCreate(BaseModel):
   email: EmailStr
   role: USER_ROLE
   password: str
+  profile: ProfileCreate
   class Config:
     use_enum_values = True
 
@@ -24,5 +27,6 @@ class UserUpdate(BaseModel):
   role: USER_ROLE
   password: str
   is_active: int
+  profile: ProfileCreate
   class Config:
     use_enum_values = True
