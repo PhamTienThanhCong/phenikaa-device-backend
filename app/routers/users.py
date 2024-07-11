@@ -39,7 +39,7 @@ def update_user(user_id: int, body: UserUpdate, db: Session = Depends(get_db)):
   return user_service.update_user(db, user_id, body)
 
 @router.delete("/{user_id}", response_model=str)
-def delete_user(user_id: int, db: Session = Depends(get_db)):
-  # if current_user.role != 1:
-  #   raise HTTPException(status_code=401, detail="Unauthorized")
+def delete_user(user_id: int, current_user: Annotated[UserBase, Depends(get_current_active_user)], db: Session = Depends(get_db)):
+  if current_user.role != 1:
+    raise HTTPException(status_code=401, detail="Unauthorized")
   return user_service.delete_user(db, user_id)
