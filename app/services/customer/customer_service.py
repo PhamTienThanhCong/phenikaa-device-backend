@@ -2,7 +2,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from app.services.customer.customer_schema import CustomerBase, CustomerUpdate
-from .customer_model import Customer
+from app.services.customer.customer_model import Customer
 
 class CustomerService:
   def __init__(self):

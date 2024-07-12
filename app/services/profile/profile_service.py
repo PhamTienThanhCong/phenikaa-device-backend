@@ -1,6 +1,6 @@
 from typing import Any
 from app.services.profile.profile_schema import ProfileCreate
-from .profile_model import Profile
+from app.services.profile.profile_model import Profile
 from sqlalchemy.orm import Session
 
 class ProfileService:
