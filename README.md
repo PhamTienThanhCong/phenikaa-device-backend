@@ -7,6 +7,13 @@
 - Mysql 
 
 ### Local Development
+- <b>Active venv: </b> https://realpython.com/python-virtual-environments-a-primer/ 
+
+- Install requirements
+```console
+$ pip install -r requirements.txt
+```
+
 - Starting app
 ```console
 $ fastapi dev app/main.py
