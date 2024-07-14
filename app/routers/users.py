@@ -18,14 +18,6 @@ user_service = UserService()
 def get_all_users(limit: int = 10, offset: int = 0, db: Session = Depends(get_db)):
   return user_service.get_all_users(db, limit, offset)
 
-@router.post("/", response_model=UserBase)
-def create_user(body: UserCreate, db: Session = Depends(get_db)):
-  # check if user already exists
-  user = user_service.get_user_by_email(db, body.email)
-  if user:
-    raise HTTPException(status_code=400, detail="User already exists")
-  return user_service.create_user(db, body)
-  
 @router.get("/{user_id}", response_model=UserBase)
 def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
   user = user_service.get_user_by_id(db, user_id)
@@ -34,12 +26,20 @@ def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
   user.profile = user_service.profile.get_profile(db, user_id)
   return user
 
+@router.post("/", response_model=UserBase)
+def create_user(current_user: Annotated[UserBase, Depends(get_current_active_user)], body: UserCreate, db: Session = Depends(get_db)):
+  # check if user already exists
+  user = user_service.get_user_by_email(db, body.email)
+  if user:
+    raise HTTPException(status_code=400, detail="User already exists")
+  return user_service.create_user(db, body)
+  
 @router.put("/{user_id}", response_model=UserBase)
-def update_user(user_id: int, body: UserUpdate, db: Session = Depends(get_db)):
+def update_user(current_user: Annotated[UserBase, Depends(get_current_active_user)], user_id: int, body: UserUpdate, db: Session = Depends(get_db)):
   return user_service.update_user(db, user_id, body)
 
 @router.delete("/{user_id}", response_model=str)
-def delete_user(user_id: int, current_user: Annotated[UserBase, Depends(get_current_active_user)], db: Session = Depends(get_db)):
+def delete_user(current_user: Annotated[UserBase, Depends(get_current_active_user)], user_id: int, db: Session = Depends(get_db)):
   if current_user.role != 1:
     raise HTTPException(status_code=401, detail="Unauthorized")
   return user_service.delete_user(db, user_id)
