@@ -2,7 +2,6 @@ from typing import List
 from fastapi import HTTPException, UploadFile
 from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
-from PIL import Image
 
 from app.core.setting import get_setting
 from app.services.devices.device_model import Device
