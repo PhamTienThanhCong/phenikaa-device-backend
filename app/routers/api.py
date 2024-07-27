@@ -1,10 +1,18 @@
 from fastapi import APIRouter
-from app.routers import users, auth, customers, device, device_category
+from app.routers import (
+    users,
+    auth,
+    customers,
+    device,
+    device_category,
+    device_borrowing,
+)
 
 router = APIRouter()
 
 
 def include_api_routes():
+    router.include_router(device_borrowing.router)
     router.include_router(device_category.router)
     router.include_router(device.router)
     router.include_router(customers.router)

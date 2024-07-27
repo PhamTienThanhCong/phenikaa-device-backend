@@ -54,3 +54,11 @@ def upload_image_presigned_url(
     presigned_url_id: str, file: UploadFile, db: Session = Depends(get_db)
 ):
     return device_category_service.upload_image(db, presigned_url_id, file)
+
+
+@router.delete("/{category_id}")
+def delete_category(category_id: int, db: Session = Depends(get_db)):
+    device_exist = device_category_service.get_category_by_id(db, category_id)
+    if device_exist is None:
+        raise HTTPException(status_code=404, detail="Device not found")
+    return device_category_service.delete_category(db, category_id)

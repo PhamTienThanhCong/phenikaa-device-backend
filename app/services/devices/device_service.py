@@ -24,6 +24,9 @@ class DeviceService:
     def get_heath(self):
         return JSONResponse(status_code=200, content={"status": "UP"})
 
+    def get_devices_by_ids(self, db: Session, device_ids: List[int]):
+        return db.query(Device).filter(Device.id.in_(device_ids)).all()
+
     def count_devices(self, db: Session, category: List[str]):
         total_devices = {}
         for cat in category:

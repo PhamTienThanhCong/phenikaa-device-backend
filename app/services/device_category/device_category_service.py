@@ -121,3 +121,8 @@ class DeviceCategoryService:
         )
         db.commit()
         return {"message": "Image uploaded successfully"}
+
+    def delete_category(self, db: Session, category_id: int):
+        db.query(DeviceCategory).filter(DeviceCategory.id == category_id).delete()
+        db.commit()
+        return "ok"
