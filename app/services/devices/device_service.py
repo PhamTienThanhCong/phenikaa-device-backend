@@ -1,6 +1,7 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, UploadFile
 from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
+from PIL import Image
 
 from app.core.setting import get_setting
 from app.services.devices.device_model import Device
@@ -10,6 +11,8 @@ from app.services.devices.device_schema import (
 )
 
 import uuid
+
+from app.utils.save_file import save_file_image
 
 
 class DeviceService:
@@ -64,3 +67,24 @@ class DeviceService:
         db.query(Device).filter(Device.id == device_id).delete()
         db.commit()
         return {"message": "Device deleted successfully"}
+
+    def upload_image(self, db: Session, presigned_url_id: str, file: UploadFile):
+        # find device by presigned_url_id
+        # check if file is image type
+
+        device = (
+            db.query(Device).filter(Device.presigned_url == presigned_url_id).first()
+        )
+        if device is None:
+            raise HTTPException(status_code=404, detail="Device not found")
+
+        file_path = f"/public/device/device_{device.id}.jpg"
+
+        # update image path to device
+        save_file_image(file, file_path)
+
+        db.query(Device).filter(Device.id == device.id).update(
+            {"image": file_path, "presigned_url": ""}
+        )
+        db.commit()
+        return {"message": "Image uploaded successfully"}
