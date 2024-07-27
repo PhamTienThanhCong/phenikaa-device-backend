@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import HTTPException, UploadFile
 from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
@@ -23,6 +24,12 @@ class DeviceService:
     def get_heath(self):
         return JSONResponse(status_code=200, content={"status": "UP"})
 
+    def count_devices(self, db: Session, category: List[str]):
+        total_devices = {}
+        for cat in category:
+            total_devices[cat] = db.query(Device).filter(Device.category == cat).count()
+        return total_devices
+
     def get_device(self, db: Session, device_id: int):
         return db.query(Device).filter(Device.id == device_id).first()
 
@@ -36,7 +43,7 @@ class DeviceService:
         if device.image:
             device.presigned_url = str(uuid.uuid4())
 
-        device.image = "default.jpg"
+        device.image = "/public/device/default.jpg"
 
         db_device = Device(**device.dict())
         db.add(db_device)

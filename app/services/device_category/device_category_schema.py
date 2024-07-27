@@ -2,14 +2,18 @@ from pydantic import BaseModel
 
 
 class DeviceCategorySchema(BaseModel):
-  id: int
-  name: str
-  is_active: bool
-  total_devices: int = 0
+    id: int
+    name: str
+    is_active: bool
+    total_devices: int = 0
+    image: str = "default.jpg"
+    presigned_url: str = ""
 
-  class Config:
-    orm_mode = True
+    class Config:
+        orm_mode = True
+
 
 class DeviceCategoryCreateSchema(BaseModel):
-  name: str
-  is_active: bool
+    name: str
+    is_active: bool
+    image: str = ""
