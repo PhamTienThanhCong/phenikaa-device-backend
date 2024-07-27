@@ -34,8 +34,9 @@ class DeviceService:
 
     def create_device(self, db: Session, device: DeviceCreateSchemaFull):
         if device.image:
-            device.image = ""
             device.presigned_url = str(uuid.uuid4())
+
+        device.image = "default.jpg"
 
         db_device = Device(**device.dict())
         db.add(db_device)
@@ -54,6 +55,9 @@ class DeviceService:
         if device.image:
             device.image = ""
             device.presigned_url = str(uuid.uuid4())
+
+        del device.image
+
         db.query(Device).filter(Device.id == device_id).update(device.dict())
         db.commit()
 

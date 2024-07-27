@@ -18,7 +18,7 @@ class DeviceCreateSchema(BaseModel):
     name: str
     category: str
     information: str | None
-    image: str | None
+    image: str | None = "default.jpg"
     note: str | None
     total: int
 
