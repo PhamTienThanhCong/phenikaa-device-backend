@@ -22,35 +22,6 @@ class DeviceBorrowingService:
         self.user = UserService()
         self.customer = CustomerService()
 
-    def validate_device(self, db: Session, devices: list):
-        for device in devices:
-            device_id = device.get("device_id")
-            device_exist = self.device.get_device(db, device_id)
-            if device_exist is None:
-                raise HTTPException(status_code=404, detail="Device not found")
-            device_exist_quantity = (
-                device_exist.total
-                - device_exist.total_used
-                - device_exist.total_maintenance
-            )
-            if device_exist_quantity < device.get("quantity"):
-                raise HTTPException(status_code=400, detail="Quantity not enough")
-            if device_exist.is_active is False:
-                raise HTTPException(status_code=400, detail="Device is not active")
-        return True
-
-    def validate_user(self, db: Session, user_id: int):
-        user = self.user.get_user_by_id(db, user_id)
-        if user is None:
-            raise HTTPException(status_code=404, detail="User not found")
-        return True
-
-    def validate_customer(self, db: Session, customer_id: int):
-        customer = self.customer.get_user_by_id(db, customer_id)
-        if customer is None:
-            raise HTTPException(status_code=404, detail="Customer not found")
-        return True
-
     def get_all_device_borrowing(self, db: Session, skip: int = 0, limit: int = 100):
         device_borrowings = (
             db.query(DeviceBorrowing)
@@ -138,9 +109,10 @@ class DeviceBorrowingService:
         self, db: Session, device_borrowing: DeviceBorrowingCreate
     ):
         data = device_borrowing.dict()
-        self.validate_device(db, data.get("devices"))
-        self.validate_user(db, data.get("user_id"))
-        self.validate_customer(db, data.get("customer_id"))
+        device_data = data.get("devices")
+        self.device.validate_device(db, data.get("devices"))
+        self.user.validate_user(db, data.get("user_id"))
+        self.customer.validate_customer(db, data.get("customer_id"))
         created_at = datetime.datetime.now()
         data["created_at"] = created_at
         data["devices"] = json.dumps(data["devices"])
@@ -149,6 +121,7 @@ class DeviceBorrowingService:
         db.add(device_borrowing)
         db.commit()
         db.refresh(device_borrowing)
+        self.device.update_device_quantity(db, device_data, True, False)
         return self.get_device_borrowing_by_id(db, device_borrowing.id)
 
     def update_device_borrowing(
@@ -158,9 +131,9 @@ class DeviceBorrowingService:
         device_borrowing: DeviceBorrowingUpdate,
     ):
         data = device_borrowing.dict()
-        self.validate_device(db, data.get("devices"))
-        self.validate_user(db, data.get("user_id"))
-        self.validate_customer(db, data.get("customer_id"))
+        self.device.validate_device(db, data.get("devices"))
+        self.user.validate_user(db, data.get("user_id"))
+        self.customer.validate_customer(db, data.get("customer_id"))
 
         data["devices"] = json.dumps(data["devices"])
 

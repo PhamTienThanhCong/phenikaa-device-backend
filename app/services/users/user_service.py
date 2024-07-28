@@ -13,6 +13,12 @@ class UserService:
     def __init__(self):
         self.profile = ProfileService()
 
+    def validate_user(self, db: Session, user_id: int):
+        user = self.get_user_by_id(db, user_id)
+        if user is None:
+            raise HTTPException(status_code=404, detail="User not found")
+        return True
+
     def get_user_by_email(self, db: Session, email: str):
         user = db.query(User).filter(User.email == email).first()
         if not user:

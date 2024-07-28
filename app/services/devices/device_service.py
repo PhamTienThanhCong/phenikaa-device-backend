@@ -23,6 +23,57 @@ class DeviceService:
     def get_heath(self):
         return JSONResponse(status_code=200, content={"status": "UP"})
 
+    def validate_device(self, db: Session, devices: list):
+        for device in devices:
+            device_id = device.get("device_id")
+            device_exist = self.get_device(db, device_id)
+            if device_exist is None:
+                raise HTTPException(status_code=404, detail="Device not found")
+            device_exist_quantity = (
+                device_exist.total
+                - device_exist.total_used
+                - device_exist.total_maintenance
+            )
+            if device_exist_quantity < device.get("quantity"):
+                raise HTTPException(status_code=400, detail="Quantity not enough")
+            if device_exist.is_active is False:
+                raise HTTPException(status_code=400, detail="Device is not active")
+        return True
+
+    def update_device_quantity(
+        self, db: Session, devices: list, is_borrowing: bool, is_returned: bool
+    ):
+        for device in devices:
+            device_id = device.get("device_id")
+            quantity = device.get("quantity")
+            device_exist = self.get_device(db, device_id)
+
+            if is_returned:
+                if is_borrowing:
+                    device_exist.total_used = device_exist.total_used - quantity
+                else:
+                    device_exist.total_maintenance = (
+                        device_exist.total_maintenance - quantity
+                    )
+            else:
+                if is_borrowing:
+                    device_exist.total_used = device_exist.total_used + quantity
+                else:
+                    device_exist.total_maintenance = (
+                        device_exist.total_maintenance + quantity
+                    )
+
+            # update data to db
+            db.query(Device).filter(Device.id == device_id).update(
+                {
+                    "total_used": device_exist.total_used,
+                    "total_maintenance": device_exist.total_maintenance,
+                }
+            )
+
+        db.commit()
+        return True
+
     def get_devices_by_ids(self, db: Session, device_ids: List[int]):
         return db.query(Device).filter(Device.id.in_(device_ids)).all()
 

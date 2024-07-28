@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
@@ -11,6 +12,12 @@ class CustomerService:
 
     def get_health(self):
         return "OK"
+
+    def validate_customer(self, db: Session, customer_id: int):
+        customer = self.get_user_by_id(db, customer_id)
+        if customer is None:
+            raise HTTPException(status_code=404, detail="Customer not found")
+        return True
 
     def get_customer_by_ids(self, db: Session, ids: list[int]):
         return db.query(Customer).filter(Customer.id.in_(ids)).all()

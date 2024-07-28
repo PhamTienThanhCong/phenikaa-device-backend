@@ -19,6 +19,22 @@ class MaintenanceServicesService:
         services = db.query(MaintenanceServices).offset(skip).limit(limit).all()
         return services
 
+    def get_services_by_ids(self, db: Session, service_ids: list[int]):
+        services = (
+            db.query(MaintenanceServices)
+            .filter(MaintenanceServices.id.in_(service_ids))
+            .all()
+        )
+        return services
+
+    def validate_service(self, db: Session, service_id: int):
+        service = self.get_service_by_id(db, service_id)
+        if not service:
+            raise JSONResponse(
+                status_code=404, content={"message": "Service not found"}
+            )
+        return True
+
     def get_service_by_id(self, db: Session, service_id: int):
         service = (
             db.query(MaintenanceServices)
