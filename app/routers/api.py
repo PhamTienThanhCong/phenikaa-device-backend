@@ -8,12 +8,14 @@ from app.routers import (
     device_borrowing,
     maintenance_services,
     device_repairs,
+    rooms,
 )
 
 router = APIRouter()
 
 
 def include_api_routes():
+    router.include_router(rooms.router)
     router.include_router(device_repairs.router)
     router.include_router(maintenance_services.router)
     router.include_router(device_borrowing.router)

@@ -9,9 +9,6 @@ class DeviceCategorySchema(BaseModel):
     image: str = "default.jpg"
     presigned_url: str = ""
 
-    class Config:
-        orm_mode = True
-
 
 class DeviceCategoryCreateSchema(BaseModel):
     name: str
