@@ -27,18 +27,18 @@ class RoomSchemaBase(RoomSchemaUpdate):
 
 
 class RoomSchemaCreate(BaseModel):
-    room_id: str
-    category: str
-    house_name: str
-    manager: str
+    room_id: str = "A2-101"
+    category: str = "Giảng đường"
+    house_name: str = "A2"
+    manager: str = "Khoa CNTT - Trường ĐH Phenikaa"
     detail: List[dict] = [
         {
-            "name": "table",
+            "name": "Bàn",
             "total": 10,
         },
         {
-            "name": "chair",
+            "name": "Ghế",
             "total": 20,
         },
     ]
-    note: str
+    note: str = "Phòng học lớn phục vụ cho việc giảng dạy"
