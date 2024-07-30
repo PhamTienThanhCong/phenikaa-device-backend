@@ -3,16 +3,16 @@ from pydantic import BaseModel
 
 
 class RoomSchemaUpdate(BaseModel):
-    category: str
-    house_name: str
-    manager: str
+    category: str = "Giảng đường"
+    house_name: str = "A2"
+    manager: str = "Khoa CNTT - Trường ĐH Phenikaa"
     detail: List[dict] = [
         {
-            "name": "table",
+            "name": "Bàn",
             "total": 10,
         },
         {
-            "name": "chair",
+            "name": "Ghế",
             "total": 20,
         },
     ]
@@ -23,7 +23,7 @@ class RoomSchemaUpdate(BaseModel):
 
 
 class RoomSchemaBase(RoomSchemaUpdate):
-    room_id: str
+    room_id: str = "A2-101"
 
 
 class RoomSchemaCreate(BaseModel):

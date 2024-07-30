@@ -15,6 +15,27 @@ class RoomService:
     def __init__(self):
         pass
 
+    def get_rooms_by_ids(
+        self, db: Session, room_ids: List[str]
+    ) -> List[RoomSchemaBase]:
+        rooms = db.query(Room).filter(Room.room_id.in_(room_ids)).all()
+        # for room in rooms:
+        #     room.detail = json.loads(room.detail)
+        return rooms
+
+    def using_room(self, db: Session, room_id: str, is_using: bool = True) -> str:
+        room = self.get_room_by_id(db, room_id)
+        if not room:
+            raise HTTPException(status_code=400, detail="Room not found")
+        if room.is_active == False:
+            raise HTTPException(status_code=400, detail="Room is not active")
+        if room.is_maintenance == True:
+            raise HTTPException(status_code=400, detail="Room is in maintenance")
+        room.is_using = is_using
+        db.query(Room).filter(Room.room_id == room_id).update(room.dict())
+        db.commit()
+        return True
+
     def get_all_rooms(self, db: Session) -> List[RoomSchemaBase]:
         # get all rooms
         rooms = db.query(Room).all()
@@ -22,11 +43,11 @@ class RoomService:
             room.detail = json.loads(room.detail)
         return rooms
 
-    def get_room_by_id(self, db: Session, room_id: str) -> RoomSchemaBase:
+    def get_room_by_id(self, db: Session, room_id: str, load=True) -> RoomSchemaBase:
         # get room by id
         room_id = room_id.upper()
         room = db.query(Room).filter(Room.room_id == room_id).first()
-        if room:
+        if room and load == True:
             room.detail = json.loads(room.detail)
         return room
 
