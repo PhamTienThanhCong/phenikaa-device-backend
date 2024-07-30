@@ -10,12 +10,14 @@ from app.routers import (
     device_repairs,
     rooms,
     room_bookings,
+    notifies,
 )
 
 router = APIRouter()
 
 
 def include_api_routes():
+    router.include_router(notifies.router)
     router.include_router(room_bookings.router)
     router.include_router(rooms.router)
     router.include_router(device_repairs.router)
