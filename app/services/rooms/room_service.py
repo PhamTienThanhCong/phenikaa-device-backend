@@ -19,8 +19,8 @@ class RoomService:
         self, db: Session, room_ids: List[str]
     ) -> List[RoomSchemaBase]:
         rooms = db.query(Room).filter(Room.room_id.in_(room_ids)).all()
-        # for room in rooms:
-        #     room.detail = json.loads(room.detail)
+        for room in rooms:
+            room.detail = json.loads(room.detail)
         return rooms
 
     def using_room(self, db: Session, room_id: str, is_using: bool = True) -> str:

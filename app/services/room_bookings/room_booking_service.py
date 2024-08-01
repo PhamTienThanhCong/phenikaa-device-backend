@@ -124,7 +124,7 @@ class RoomBookingService:
             raise HTTPException(status_code=404, detail="Room booking not found")
         user = self.user.get_user_by_id(db, room_booking.user_id)
         customer = self.customer.get_user_by_id(db, room_booking.customer_id)
-        room = self.room.get_room_by_id(db, room_booking.room_id, False)
+        room = self.room.get_room_by_id(db, room_booking.room_id)
         room_booking.user = user
         room_booking.customer = customer
         room_booking.room = room
