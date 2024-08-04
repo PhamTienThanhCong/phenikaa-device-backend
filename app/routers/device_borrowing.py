@@ -24,7 +24,7 @@ def get_health():
     return "OK"
 
 
-@router.get("/", response_model=list[DeviceBorrowingSchema])
+@router.get("/")
 def get_all_device_borrowing(
     db: Session = Depends(get_db),
     skip: int = 0,

@@ -22,7 +22,7 @@ def get_health():
     return "OK"
 
 
-@router.get("/", response_model=List[DeviceRepairsSchema])
+@router.get("/")
 def get_all_device_repairs(
     db: Session = Depends(get_db),
     skip: int = 0,
