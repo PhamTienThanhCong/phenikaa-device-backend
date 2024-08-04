@@ -9,10 +9,7 @@ app = FastAPI()
 # Mount the public directory
 app.mount("/public", StaticFiles(directory="public"), name="public")
 
-origins = [
-    "http://localhost:3000",
-    "*"
-]
+origins = ["http://localhost:3000", "*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -25,6 +22,7 @@ app.add_middleware(
 Base.metadata.create_all(bind=engine)
 
 app.include_router(router_api, prefix="/api")
+
 
 @app.get("/health")
 async def root():
