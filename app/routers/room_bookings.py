@@ -19,7 +19,7 @@ router = APIRouter(prefix="/room-booking", tags=["room booking"])
 room_booking_service = RoomBookingService()
 
 
-@router.get("/", response_model=Annotated[List[RoomBookingSchemaBase], "room booking"])
+@router.get("/", response_model=list[RoomBookingSchemaBase])
 def get_all_room_bookings(
     skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 ):
