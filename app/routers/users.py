@@ -27,7 +27,7 @@ def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
   return user
 
 @router.post("/", response_model=UserBase)
-def create_user(current_user: Annotated[UserBase, Depends(get_current_active_user)], body: UserCreate, db: Session = Depends(get_db)):
+def create_user(body: UserCreate, db: Session = Depends(get_db)):
   # check if user already exists
   user = user_service.get_user_by_email(db, body.email)
   if user:

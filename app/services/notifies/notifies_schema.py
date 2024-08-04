@@ -14,7 +14,7 @@ class NotifySchemaBase(BaseModel):
     created_at: Any
     confirmed_at: Any
     explain: str | None
-    user_verifier: UserBase | None
+    user_verifier: UserBase | None = None
 
 
 class NotifySchemaCreate(BaseModel):
