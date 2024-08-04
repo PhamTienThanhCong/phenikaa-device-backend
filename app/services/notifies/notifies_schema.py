@@ -13,7 +13,7 @@ class NotifySchemaBase(BaseModel):
     is_read: bool
     created_at: Any
     confirmed_at: Any
-    explain: str | None
+    explain: str | None = None
     user_verifier: UserBase | None = None
 
 

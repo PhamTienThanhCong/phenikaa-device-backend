@@ -17,34 +17,34 @@ class DeviceCoreSchema(BaseModel):
 class DeviceCreateSchema(BaseModel):
     name: str
     category: str
-    information: str | None
+    information: str | None = None
     image: str | None = "default.jpg"
-    note: str | None
+    note: str | None = None
     total: int
 
 
 class DeviceCreateSchemaFull(DeviceCreateSchema):
-    presigned_url: str | None
+    presigned_url: str | None = None
 
 
 class DeviceCreateResponse(DeviceCoreSchema):
-    presigned_url: str | None
+    presigned_url: str | None = None
 
 
 class DeviceUpdateResponse(DeviceCoreSchema):
-    presigned_url: str | None
+    presigned_url: str | None = None
 
 
 class DeviceUpdateSchema(BaseModel):
-    name: str | None
-    category: str | None
-    information: str | None
-    note: str | None
-    image: str | None
-    total: int | None
-    total_used: int | None
-    total_maintenance: int | None
-    is_active: bool | None
+    name: str | None = None
+    category: str | None = None
+    information: str | None = None
+    note: str | None = None
+    image: str | None = None
+    total: int | None = None
+    total_used: int | None = None
+    total_maintenance: int | None = None
+    is_active: bool | None = None
 
 
 class DeviceUpdateSchemaFull(DeviceUpdateSchema):
