@@ -25,11 +25,13 @@ Base.metadata.create_all(bind=engine)
 
 app.include_router(router_api, prefix="/api")
 
+
 @app.get("/", response_class=HTMLResponse)
 async def root():
     with open(os.path.join("public", "index.html")) as f:
         html_content = f.read()
     return HTMLResponse(content=html_content)
+
 
 @app.get("/health")
 async def root():
