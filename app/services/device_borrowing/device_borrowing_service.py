@@ -124,6 +124,31 @@ class DeviceBorrowingService:
         self.device.update_device_quantity(db, device_data, True, False)
         return self.get_device_borrowing_by_id(db, device_borrowing.id)
 
+    def return_device_borrowing(self, db: Session, device_borrowing_id: int):
+        device_borrowing = (
+            db.query(DeviceBorrowing)
+            .filter(DeviceBorrowing.id == device_borrowing_id)
+            .first()
+        )
+        if not device_borrowing:
+            raise HTTPException(status_code=404, detail="Device borrowing not found")
+        device_data = json.loads(device_borrowing.devices)
+        current_time = datetime.datetime.now()
+        if device_borrowing.is_returned is False:
+            returning_date = device_borrowing.returning_date
+            if current_time > returning_date:
+                device_borrowing.status = "overdue"
+            else:
+                device_borrowing.status = "borrowing"
+        else:
+            device_borrowing.status = "returned"
+        device_borrowing.is_returned = True
+        device_borrowing.retired_date = current_time
+        db.commit()
+        self.device.update_device_quantity(db, device_data, False, True)
+        return self.get_device_borrowing_by_id(db, device_borrowing.id)
+    
+    
     def update_device_borrowing(
         self,
         db: Session,

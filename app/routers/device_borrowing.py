@@ -59,6 +59,12 @@ def update_device_borrowing(
         db, device_borrowing_id, device_borrowing
     )
 
+@router.post("/{device_borrowing_id}/return")
+def return_device_borrowing(
+    device_borrowing_id: int,
+    db: Session = Depends(get_db),
+):
+    return device_service.return_device_borrowing(db, device_borrowing_id)
 
 @router.delete("/{device_borrowing_id}")
 def delete_device_borrowing(
