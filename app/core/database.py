@@ -13,9 +13,7 @@ NAME_DB = os.getenv("NAME_DB")
 PORT_DB = os.getenv("PORT_DB")
 HOST_DB = os.getenv("HOST_DB")
 
-SQLALCHEMY_DATABASE_URL = (
-    f"mysql+pymysql://{USER_DB}:{PASSWORD_DB}@{HOST_DB}:{PORT_DB}/{NAME_DB}"
-)
+SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{USER_DB}:{PASSWORD_DB}@{HOST_DB}:{PORT_DB}/{NAME_DB}?charset=utf8mb4"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
