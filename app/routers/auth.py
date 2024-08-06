@@ -67,65 +67,71 @@ async def reload_db(db: Session = Depends(get_db)):
     room_service = RoomService()
 
     run_success = 0
+    die_service = []
 
     try:
         customer_service.get_all_users(db)
         run_success = run_success + 1
     except Exception as e:
-        pass
+        die_service.append("customer_service")
 
     try:
         user_service.get_all_users(db)
         run_success = run_success + 1
     except Exception as e:
-        pass
+        die_service.append("user_service")
 
     try:
         device_borrowing_service.get_all_device_borrowing(db)
         run_success = run_success + 1
     except Exception as e:
-        pass
+        die_service.append("device_borrowing_service")
 
     try:
         device_category.get_all_category(db)
         run_success = run_success + 1
     except Exception as e:
-        pass
+        die_service.append("device_category")
 
     try:
         device_repair.get_all_device_repairs(db)
         run_success = run_success + 1
     except Exception as e:
-        pass
+        die_service.append("device_repair")
 
     try:
         device.get_devices(db)
         run_success = run_success + 1
     except Exception as e:
-        pass
+        die_service.append("device")
 
     try:
         maintenance_services.get_all_services(db)
         run_success = run_success + 1
     except Exception as e:
-        pass
+        die_service.append("maintenance_services")
 
     try:
         notification.get_notifies(db)
         run_success = run_success + 1
     except Exception as e:
-        pass
+        die_service.append("notification")
 
     try:
         room_booking.get_all_room_bookings(db)
         run_success = run_success + 1
     except Exception as e:
-        pass
+        die_service.append("room_booking")
 
     try:
         room_service.get_all_rooms(db)
         run_success = run_success + 1
     except Exception as e:
-        pass
+        die_service.append("room_service")
 
-    return JSONResponse(content={"message": f"Run success {run_success}/10 services"})
+    return JSONResponse(
+        content={
+            "message": f"Run success {run_success}/10 services",
+            "die_service": die_service,
+        }
+    )
