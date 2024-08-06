@@ -66,54 +66,66 @@ async def reload_db(db: Session = Depends(get_db)):
     room_booking = RoomBookingService()
     room_service = RoomService()
 
+    run_success = 0
+
     try:
         customer_service.get_all_users(db)
+        run_success = run_success + 1
     except Exception as e:
         pass
 
     try:
         user_service.get_all_users(db)
+        run_success = run_success + 1
     except Exception as e:
         pass
 
     try:
         device_borrowing_service.get_all_device_borrowing(db)
+        run_success = run_success + 1
     except Exception as e:
         pass
 
     try:
         device_category.get_all_category(db)
+        run_success = run_success + 1
     except Exception as e:
         pass
 
     try:
         device_repair.get_all_device_repairs(db)
+        run_success = run_success + 1
     except Exception as e:
         pass
 
     try:
         device.get_devices(db)
+        run_success = run_success + 1
     except Exception as e:
         pass
 
     try:
         maintenance_services.get_all_services(db)
+        run_success = run_success + 1
     except Exception as e:
         pass
 
     try:
         notification.get_notifies(db)
+        run_success = run_success + 1
     except Exception as e:
         pass
 
     try:
         room_booking.get_all_room_bookings(db)
+        run_success = run_success + 1
     except Exception as e:
         pass
 
     try:
         room_service.get_all_rooms(db)
+        run_success = run_success + 1
     except Exception as e:
         pass
 
-    return JSONResponse(content={"message": "Reload database successfully"})
+    return JSONResponse(content={"message": f"Run success {run_success}/10 services"})
