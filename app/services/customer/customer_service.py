@@ -34,7 +34,7 @@ class CustomerService:
         return new_user
 
     # get all users
-    def get_all_users(self, db: Session, limit: int, offset: int):
+    def get_all_users(self, db: Session, limit: int = 100, offset: int = 0):
         return db.query(Customer).offset(offset).limit(limit).all()
 
     # update user

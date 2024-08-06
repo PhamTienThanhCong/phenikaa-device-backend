@@ -42,7 +42,7 @@ class UserService:
         db_user.profile = profile
         return db_user
 
-    def get_all_users(self, db: Session, limit: int, offset: int):
+    def get_all_users(self, db: Session, limit: int = 100, offset: int = 0):
         user_list = db.query(User).limit(limit).offset(offset).all()
         # get id in user_list
         user_id_list = [user.id for user in user_list]

@@ -22,6 +22,7 @@ from app.services.maintenance_services.maintenance_services_service import (
     MaintenanceServicesService,
 )
 from app.services.notifies.notifies_service import NotifyService
+from app.services.profile.profile_service import ProfileService
 from app.services.room_bookings.room_booking_service import RoomBookingService
 from app.services.rooms.room_service import RoomService
 from app.services.users.user_schema import UserBase
@@ -65,6 +66,7 @@ async def reload_db(db: Session = Depends(get_db)):
     notification = NotifyService()
     room_booking = RoomBookingService()
     room_service = RoomService()
+    profile_service = ProfileService()
 
     run_success = 0
     die_service = []
@@ -74,6 +76,12 @@ async def reload_db(db: Session = Depends(get_db)):
         run_success = run_success + 1
     except Exception as e:
         die_service.append("customer_service")
+
+    try:
+        profile_service.get_profile(db, 1)
+        run_success = run_success + 1
+    except Exception as e:
+        die_service.append("profile_service")
 
     try:
         user_service.get_all_users(db)
@@ -131,7 +139,7 @@ async def reload_db(db: Session = Depends(get_db)):
 
     return JSONResponse(
         content={
-            "message": f"Run success {run_success}/10 services",
+            "message": f"Run success {run_success}/11 services",
             "die_service": die_service,
         }
     )
