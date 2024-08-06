@@ -1,1 +1,1 @@
-web: fastapi run main.py
+web: fastapi run app/main.py
