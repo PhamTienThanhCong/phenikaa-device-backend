@@ -18,7 +18,7 @@ router = APIRouter(prefix="/room", tags=["room"])
 device_service = RoomService()
 
 
-@router.get("/", response_model=list[RoomSchemaBase])
+@router.get("", response_model=list[RoomSchemaBase])
 def get_all_rooms(db: Session = Depends(get_db)):
     rooms = device_service.get_all_rooms(db)
     return rooms
@@ -32,7 +32,7 @@ def get_room_by_id(room_id: str, db: Session = Depends(get_db)):
     return room
 
 
-@router.post("/")
+@router.post("")
 def create_room(room: RoomSchemaCreate, db: Session = Depends(get_db)):
     return device_service.create_room(db, room)
 

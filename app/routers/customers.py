@@ -20,7 +20,7 @@ def health():
 
 
 # get all users
-@router.get("/", response_model=list[CustomerBase])
+@router.get("", response_model=list[CustomerBase])
 def get_all_users(limit: int = 10, offset: int = 0, db: Session = Depends(get_db)):
     return customer_service.get_all_users(db, limit, offset)
 
@@ -35,7 +35,7 @@ def get_user_by_id(id: int, db: Session = Depends(get_db)):
 
 
 # create new user
-@router.post("/", response_model=CustomerBase)
+@router.post("", response_model=CustomerBase)
 def create_user(user: CustomerBase, db: Session = Depends(get_db)):
     if customer_service.get_user_by_id(db, user.id):
         raise HTTPException(status_code=400, detail="User already exists")

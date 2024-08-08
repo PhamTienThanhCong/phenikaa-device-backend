@@ -29,7 +29,7 @@ async def get_info(request: Request):
     return await notify_service.get_my_ip(client_ip, user_agent_str)
 
 
-@router.get("/", response_model=List[NotifySchemaBase])
+@router.get("", response_model=List[NotifySchemaBase])
 async def get_notifies(
     skip: int = 0,
     limit: int = 100,
@@ -46,7 +46,7 @@ async def get_notify_by_id(notify_id: int, db: Session = Depends(get_db)):
     return notify_service.get_notify_by_id(db, notify_id)
 
 
-@router.post("/", response_model=NotifySchemaBase)
+@router.post("", response_model=NotifySchemaBase)
 async def create_notify(
     notify: NotifySchemaCreate,
     request: Request,

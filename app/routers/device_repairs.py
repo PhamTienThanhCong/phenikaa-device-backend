@@ -22,7 +22,7 @@ def get_health():
     return "OK"
 
 
-@router.get("/")
+@router.get("")
 def get_all_device_repairs(
     db: Session = Depends(get_db),
     skip: int = 0,
@@ -42,7 +42,7 @@ def get_device_repair_by_id(
     return service
 
 
-@router.post("/")
+@router.post("")
 def create_device_repair(
     device_repair_payload: DeviceRepairsCreate,
     db: Session = Depends(get_db),

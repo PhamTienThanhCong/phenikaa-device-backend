@@ -28,7 +28,7 @@ def get_health():
     return device_service.get_heath()
 
 
-@router.get("/", response_model=list[DeviceCoreSchema])
+@router.get("", response_model=list[DeviceCoreSchema])
 def get_devices(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return device_service.get_devices(db, skip, limit)
 
@@ -48,7 +48,7 @@ def upload_image_presigned_url(
     return device_service.upload_image(db, presigned_url_id, file)
 
 
-@router.post("/", response_model=DeviceCreateResponse)
+@router.post("", response_model=DeviceCreateResponse)
 def create_device(device: DeviceCreateSchema, db: Session = Depends(get_db)):
     # check device exist
     device_exist = device_service.get_device_by_name(db, device.name)

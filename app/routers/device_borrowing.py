@@ -24,7 +24,7 @@ def get_health():
     return "OK"
 
 
-@router.get("/")
+@router.get("")
 def get_all_device_borrowing(
     db: Session = Depends(get_db),
     skip: int = 0,
@@ -41,7 +41,7 @@ def get_device_borrowing_by_id(
     return device_service.get_device_borrowing_by_id(db, device_borrowing_id)
 
 
-@router.post("/", response_model=DeviceBorrowingSchema)
+@router.post("", response_model=DeviceBorrowingSchema)
 def create_device_borrowing(
     device_borrowing: DeviceBorrowingCreate,
     db: Session = Depends(get_db),
@@ -59,12 +59,14 @@ def update_device_borrowing(
         db, device_borrowing_id, device_borrowing
     )
 
+
 @router.post("/{device_borrowing_id}/return")
 def return_device_borrowing(
     device_borrowing_id: int,
     db: Session = Depends(get_db),
 ):
     return device_service.return_device_borrowing(db, device_borrowing_id)
+
 
 @router.delete("/{device_borrowing_id}")
 def delete_device_borrowing(

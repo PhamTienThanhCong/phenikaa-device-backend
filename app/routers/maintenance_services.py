@@ -24,7 +24,7 @@ def get_health():
     return device_service.get_health()
 
 
-@router.get("/", response_model=List[MaintenanceServiceBase])
+@router.get("", response_model=List[MaintenanceServiceBase])
 def get_all_services(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return device_service.get_all_services(db, skip, limit)
 
@@ -37,7 +37,7 @@ def get_service_by_id(service_id: int, db: Session = Depends(get_db)):
     return service
 
 
-@router.post("/", response_model=MaintenanceServiceBase)
+@router.post("", response_model=MaintenanceServiceBase)
 def create_service(service: MaintenanceServicePayload, db: Session = Depends(get_db)):
     try:
         return device_service.create_service(db, service)

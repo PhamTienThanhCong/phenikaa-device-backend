@@ -17,7 +17,7 @@ router = APIRouter(prefix="/device-category", tags=["category device"])
 device_category_service = DeviceCategoryService()
 
 
-@router.get("/", response_model=list[DeviceCategorySchema])
+@router.get("", response_model=list[DeviceCategorySchema])
 def get_all_category(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return device_category_service.get_all_category(db, skip, limit)
 
@@ -30,7 +30,7 @@ def get_category_by_id(category_id: int, db: Session = Depends(get_db)):
     return device
 
 
-@router.post("/", response_model=DeviceCategorySchema)
+@router.post("", response_model=DeviceCategorySchema)
 def create_category(device: DeviceCategoryCreateSchema, db: Session = Depends(get_db)):
     # check device exist
     device_exist = device_category_service.get_category_by_name(db, device.name)

@@ -19,7 +19,7 @@ router = APIRouter(prefix="/room-booking", tags=["room booking"])
 room_booking_service = RoomBookingService()
 
 
-@router.get("/", response_model=list[RoomBookingSchemaBase])
+@router.get("", response_model=list[RoomBookingSchemaBase])
 def get_all_room_bookings(
     skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 ):
@@ -35,7 +35,7 @@ def get_room_booking_by_id(room_booking_id: int, db: Session = Depends(get_db)):
     return room_booking
 
 
-@router.post("/", response_model=RoomBookingSchemaBase)
+@router.post("", response_model=RoomBookingSchemaBase)
 def create_room_booking(
     room_booking: RoomBookingSchemaCreate, db: Session = Depends(get_db)
 ):
