@@ -17,3 +17,6 @@ class Notify(Base):
     confirmed_at = Column(DateTime, nullable=True, default=None)
     user_id = Column(Integer, nullable=True, default=None)
     location_info = Column(JSON, nullable=True, default=None)
+
+    # set Collation to utf8mb4_unicode_ci
+    __table_args__ = {"mysql_collate": "utf8mb4_unicode_ci"}

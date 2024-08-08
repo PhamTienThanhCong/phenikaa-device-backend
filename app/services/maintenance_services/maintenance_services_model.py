@@ -14,3 +14,5 @@ class MaintenanceServices(Base):
     email = Column(String(100), nullable=False, unique=True)
     status = Column(Boolean, default=True)
     map_url = Column(String(255), nullable=True)
+
+    __table_args__ = {"mysql_collate": "utf8mb4_unicode_ci"}

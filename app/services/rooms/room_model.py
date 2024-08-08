@@ -14,3 +14,5 @@ class Room(Base):
     is_active = Column(Boolean, default=True)
     is_using = Column(Boolean, default=False)
     is_maintenance = Column(Boolean, default=False)
+
+    __table_args__ = {"mysql_collate": "utf8mb4_unicode_ci"}

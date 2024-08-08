@@ -18,3 +18,5 @@ class RoomBooking(Base):
     created_at = Column(DateTime, index=True)
     updated_at = Column(DateTime, index=True)
     is_active = Column(Boolean, default=True)
+
+    __table_args__ = {"mysql_collate": "utf8mb4_unicode_ci"}

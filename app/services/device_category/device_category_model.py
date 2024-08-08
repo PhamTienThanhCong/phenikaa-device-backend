@@ -10,3 +10,5 @@ class DeviceCategory(Base):
     is_active = Column(Boolean, default=True)
     image = Column(String(255), default="default.jpg")
     presigned_url = Column(String(255), default="")
+
+    __table_args__ = {"mysql_collate": "utf8mb4_unicode_ci"}

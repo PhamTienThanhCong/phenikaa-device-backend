@@ -15,3 +15,5 @@ class DeviceBorrowing(Base):
     retired_date = Column(DateTime, nullable=True, default=None)
     note = Column(String(255))
     created_at = Column(DateTime)
+
+    __table_args__ = {"mysql_collate": "utf8mb4_unicode_ci"}

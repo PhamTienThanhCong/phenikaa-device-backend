@@ -1,6 +1,7 @@
 from sqlalchemy import Boolean, Column, Integer, String
 from app.core.database import Base
 
+
 class Customer(Base):
     __tablename__ = "customers"
 
@@ -18,3 +19,5 @@ class Customer(Base):
     expired = Column(Boolean, default=False)
     department = Column(String(100), index=True)
     status = Column(Integer, index=True)
+
+    __table_args__ = {"mysql_collate": "utf8mb4_unicode_ci"}
