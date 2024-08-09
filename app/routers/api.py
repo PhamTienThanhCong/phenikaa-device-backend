@@ -12,12 +12,14 @@ from app.routers import (
     room_bookings,
     notifies,
     error,
+    camera,
 )
 
 router = APIRouter()
 
 
 def include_api_routes():
+    router.include_router(camera.router)
     router.include_router(notifies.router)
     router.include_router(room_bookings.router)
     router.include_router(rooms.router)

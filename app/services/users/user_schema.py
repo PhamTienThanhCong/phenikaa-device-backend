@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, EmailStr
 
 from app.enums.user_role import USER_ROLE
@@ -30,7 +31,7 @@ class UserCreate(BaseModel):
 class UserUpdate(BaseModel):
     full_name: str
     role: USER_ROLE
-    password: str
+    password: Optional[str]
     is_active: int
     profile: ProfileCreate
 
