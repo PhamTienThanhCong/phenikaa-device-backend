@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Body, Depends, HTTPException
 
 from app.core.dependencies import get_db
 from app.services.auth.authorize import get_current_active_user
@@ -30,7 +30,7 @@ def create_camera(camera: CameraCreateSchema, db: Session = Depends(get_db)):
 
 @router.put("/{camera_id}", response_model=CameraSchema)
 def update_camera(
-    camera_id: int, camera: CameraUpdateSchema, db: Session = Depends(get_db)
+    camera_id: int, camera: CameraUpdateSchema = Body(), db: Session = Depends(get_db)
 ):
     return customer_service.update(db, camera_id, camera)
 
