@@ -23,6 +23,11 @@ class NotifyService:
         self.customer = CustomerService()
         self.user = UserService()
 
+    def get_test(self, db: Session) -> str:
+        # get all notifies
+        notifies = db.query(Notify).limit(10).all()
+        return notifies
+
     async def get_my_ip(self, client_ip: str, user_agent_str: Any) -> LocationInfo:
         # Get location information using ipinfo.io
         async with httpx.AsyncClient() as client:

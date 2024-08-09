@@ -11,6 +11,7 @@ from app.services.auth.authorize import (
     get_current_active_user,
 )
 from app.services.auth.authorize_schema import Token, UserLogin
+from app.services.camera.camera_service import CameraService
 from app.services.customer.customer_service import CustomerService
 from app.services.device_borrowing.device_borrowing_service import (
     DeviceBorrowingService,
@@ -67,6 +68,7 @@ async def reload_db(db: Session = Depends(get_db)):
     room_booking = RoomBookingService()
     room_service = RoomService()
     profile_service = ProfileService()
+    camera_service = CameraService()
 
     run_success = 0
     die_service = []
@@ -102,7 +104,7 @@ async def reload_db(db: Session = Depends(get_db)):
         die_service.append("device_category")
 
     try:
-        device_repair.get_all_device_repairs(db)
+        device_repair.get_test(db)
         run_success = run_success + 1
     except Exception as e:
         die_service.append("device_repair")
@@ -120,13 +122,14 @@ async def reload_db(db: Session = Depends(get_db)):
         die_service.append("maintenance_services")
 
     try:
-        notification.get_notifies(db)
+        notification.get_test(db)
         run_success = run_success + 1
     except Exception as e:
+        print(e)
         die_service.append("notification")
 
     try:
-        room_booking.get_all_room_bookings(db)
+        room_booking.get_test(db)
         run_success = run_success + 1
     except Exception as e:
         die_service.append("room_booking")
@@ -137,9 +140,15 @@ async def reload_db(db: Session = Depends(get_db)):
     except Exception as e:
         die_service.append("room_service")
 
+    try:
+        camera_service.get_all(db)
+        run_success = run_success + 1
+    except Exception as e:
+        die_service.append("camera_service")
+
     return JSONResponse(
         content={
-            "message": f"Run success {run_success}/11 services",
+            "message": f"Run success {run_success}/12 services",
             "die_service": die_service,
         }
     )

@@ -30,6 +30,11 @@ class DeviceRepairsService:
     def get_heath(self):
         return JSONResponse(status_code=200, content={"status": "UP"})
 
+    def get_test(self, db: Session):
+        # get all device repairs
+        device_repairs = db.query(DeviceRepairs).limit(10).all()
+        return device_repairs
+
     def get_all_device_repairs(self, db: Session, skip: int = 0, limit: int = 100):
         device_repairs = (
             db.query(DeviceRepairs)

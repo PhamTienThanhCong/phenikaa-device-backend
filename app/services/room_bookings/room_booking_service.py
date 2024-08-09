@@ -80,6 +80,10 @@ class RoomBookingService:
         else:
             return "đã sử dụng"
 
+    def get_test(self, db: Session):
+        rooms = db.query(RoomBooking).limit(10).all()
+        return rooms
+
     def get_all_room_bookings(
         self, db: Session, skip: int = 0, limit: int = 100
     ) -> List[RoomBookingSchemaBase]:
