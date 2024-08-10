@@ -6,19 +6,19 @@ router = APIRouter(prefix="/test-error", tags=["error"])
 
 @router.get("")
 def get_error():
-    raise HTTPException(status_code=500)
+    return 0/1
 
 
 @router.post("")
 def get_error():
-    raise HTTPException(status_code=500)
+    return 0/1
 
 
 @router.put("")
 def get_error():
-    raise HTTPException(status_code=500)
+    return 0/1
 
 
 @router.delete("")
 def get_error():
-    raise HTTPException(status_code=500)
+    return 0/1
