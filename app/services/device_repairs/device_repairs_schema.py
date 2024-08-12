@@ -12,6 +12,7 @@ class Devices(BaseModel):
     quantity: int
     device: DeviceCoreSchema
     cost_per_unit: int
+    arise_from: int = 0
 
 
 class DevicesCreate(BaseModel):
