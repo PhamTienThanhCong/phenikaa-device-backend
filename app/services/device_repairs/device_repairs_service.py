@@ -170,6 +170,10 @@ class DeviceRepairsService:
         # check device repair is returned
         if device_repair_request.is_returned == True:
             raise HTTPException(status_code=400, detail="Device repair is returned")
+
+        if device_repair.is_returned == False:
+            raise HTTPException(status_code=400, detail="Device repair can't update")
+
         data = device_repair.dict()
         device_data = data.get("devices")
         device_data = self.validate_device_return(
