@@ -38,31 +38,15 @@ class DeviceRepairsService:
             quantity_old = device.get("quantity")
             fined = False
             for device_new in devices:
-                print(device_new)
                 if device_id == device_new.get("device_id"):
-                    quantity_new = device_new.get("quantity_done")
-                    if quantity_new < 0:
-                        raise HTTPException(
-                            status_code=400,
-                            detail="Quantity of device return must be greater than or equal to 0",
-                        )
-                    if quantity_new > quantity_old:
-                        raise HTTPException(
-                            status_code=400,
-                            detail="Quantity of device return must be less than or equal to quantity of device repair",
-                        )
-                    else:
-                        device["quantity_done"] = quantity_new
-                        device["quantity_failed"] = quantity_old - quantity_new
-                        device["arise_from"] = device_new.get("arise_from")
-                        device["note"] = device_new.get("note")
-                        fined = True
+                    device["arise_from"] = device_new.get("arise_from")
+                    device["note"] = device_new.get("note")
+                    fined = True
             if fined == False:
                 raise HTTPException(
                     status_code=400,
                     detail="Device return must be match with device repair",
                 )
-
         return devices_old
 
     def get_test(self, db: Session):
@@ -184,8 +168,8 @@ class DeviceRepairsService:
             raise HTTPException(status_code=404, detail="Device repair not found")
 
         # check device repair is returned
-        # if device_repair_request.is_returned == True:
-        #     raise HTTPException(status_code=400, detail="Device repair is returned")
+        if device_repair_request.is_returned == True:
+            raise HTTPException(status_code=400, detail="Device repair is returned")
         data = device_repair.dict()
         device_data = data.get("devices")
         device_data = self.validate_device_return(

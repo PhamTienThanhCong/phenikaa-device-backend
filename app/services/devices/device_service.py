@@ -77,7 +77,7 @@ class DeviceService:
     def return_device_maintenance(self, db: Session, devices: list):
         for device in devices:
             device_id = device.get("device_id")
-            quantity_done = device.get("quantity_done")
+            quantity_done = device.get("quantity")
             device_exist = self.get_device(db, device_id)
             device_exist.total_maintenance = (
                 device_exist.total_maintenance - quantity_done

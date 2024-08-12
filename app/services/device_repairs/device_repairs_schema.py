@@ -22,7 +22,6 @@ class DevicesCreate(BaseModel):
 
 class DeviceUpdate(BaseModel):
     device_id: int
-    quantity_done: int
     arise_from: int
     note: str
 
