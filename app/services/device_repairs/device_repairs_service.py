@@ -30,6 +30,41 @@ class DeviceRepairsService:
     def get_heath(self):
         return JSONResponse(status_code=200, content={"status": "UP"})
 
+    def validate_device_return(self, devices_old: list, devices: list):
+        devices_old = json.loads(devices_old)
+        for device in devices_old:
+            # get device id
+            device_id = device.get("device_id")
+            quantity_old = device.get("quantity")
+            fined = False
+            for device_new in devices:
+                print(device_new)
+                if device_id == device_new.get("device_id"):
+                    quantity_new = device_new.get("quantity_done")
+                    if quantity_new < 0:
+                        raise HTTPException(
+                            status_code=400,
+                            detail="Quantity of device return must be greater than or equal to 0",
+                        )
+                    if quantity_new > quantity_old:
+                        raise HTTPException(
+                            status_code=400,
+                            detail="Quantity of device return must be less than or equal to quantity of device repair",
+                        )
+                    else:
+                        device["quantity_done"] = quantity_new
+                        device["quantity_failed"] = quantity_old - quantity_new
+                        device["arise_from"] = device_new.get("arise_from")
+                        device["note"] = device_new.get("note")
+                        fined = True
+            if fined == False:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Device return must be match with device repair",
+                )
+
+        return devices_old
+
     def get_test(self, db: Session):
         # get all device repairs
         device_repairs = db.query(DeviceRepairs).limit(10).all()
@@ -145,20 +180,23 @@ class DeviceRepairsService:
         device_repair_request = (
             db.query(DeviceRepairs).filter(DeviceRepairs.id == device_repair_id).first()
         )
+        if not device_repair_request:
+            raise HTTPException(status_code=404, detail="Device repair not found")
+
+        # check device repair is returned
+        # if device_repair_request.is_returned == True:
+        #     raise HTTPException(status_code=400, detail="Device repair is returned")
         data = device_repair.dict()
         device_data = data.get("devices")
-        self.device.validate_device(db, device_data)
-        self.user.validate_user(db, data.get("user_id"))
-        self.service.validate_service(db, data.get("service_id"))
-
-        device_revert = json.loads(device_repair_request.devices)
-        self.device.update_device_quantity(db, device_revert, False, True)
-        db.commit()
-        self.device.update_device_quantity(db, device_data, False, False)
-        data["devices"] = json.dumps(data["devices"])
-        db.query(DeviceRepairs).filter(DeviceRepairs.id == device_repair_id).update(
-            data, synchronize_session=False
+        device_data = self.validate_device_return(
+            device_repair_request.devices, device_data
         )
+        data["devices"] = json.dumps(device_data)
+        db.query(DeviceRepairs).filter(DeviceRepairs.id == device_repair_id).update(
+            data
+        )
+        db.commit()
+        self.device.return_device_maintenance(db, device_data)
         return self.get_device_repair_by_id(db, device_repair_id)
 
     def delete_device_repair(self, db: Session, device_repair_id: int):

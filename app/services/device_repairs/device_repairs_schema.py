@@ -20,6 +20,13 @@ class DevicesCreate(BaseModel):
     cost_per_unit: int
 
 
+class DeviceUpdate(BaseModel):
+    device_id: int
+    quantity_done: int
+    arise_from: int
+    note: str
+
+
 class DeviceRepairsSchema(BaseModel):
     id: int
     name: str
@@ -44,5 +51,8 @@ class DeviceRepairsCreate(BaseModel):
     note: str
 
 
-class DeviceRepairsUpdate(DeviceRepairsCreate):
+class DeviceRepairsUpdate(BaseModel):
     is_returned: bool
+    devices: list[DeviceUpdate]
+    retired_date: Any = "2024-01-01 00:00:00"
+    note: str

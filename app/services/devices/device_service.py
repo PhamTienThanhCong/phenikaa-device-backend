@@ -74,6 +74,21 @@ class DeviceService:
         db.commit()
         return True
 
+    def return_device_maintenance(self, db: Session, devices: list):
+        for device in devices:
+            device_id = device.get("device_id")
+            quantity_done = device.get("quantity_done")
+            device_exist = self.get_device(db, device_id)
+            device_exist.total_maintenance = (
+                device_exist.total_maintenance - quantity_done
+            )
+            db.query(Device).filter(Device.id == device_id).update(
+                {"total_maintenance": device_exist.total_maintenance}
+            )
+
+        db.commit()
+        return True
+
     def get_devices_by_ids(self, db: Session, device_ids: List[int]):
         return db.query(Device).filter(Device.id.in_(device_ids)).all()
 
