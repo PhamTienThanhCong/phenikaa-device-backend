@@ -10,6 +10,7 @@ from app.services.device_borrowing.device_borrowing_model import DeviceBorrowing
 from app.services.device_borrowing.device_borrowing_schema import (
     DeviceBorrowingCreate,
     DeviceBorrowingUpdate,
+    DevicesUpdate,
 )
 from app.services.devices.device_service import DeviceService
 from app.services.users.user_service import UserService
@@ -147,24 +148,70 @@ class DeviceBorrowingService:
         db.commit()
         self.device.update_device_quantity(db, device_data, False, True)
         return self.get_device_borrowing_by_id(db, device_borrowing.id)
-    
-    
+
+    def validate_device_return(
+        self, db: Session, device_borrowing_id: int, data: list[DevicesUpdate]
+    ):
+        device_borrowing = (
+            db.query(DeviceBorrowing)
+            .filter(DeviceBorrowing.id == device_borrowing_id)
+            .first()
+        )
+        if not device_borrowing:
+            raise HTTPException(status_code=404, detail="Device borrowing not found")
+        device_data = json.loads(device_borrowing.devices)
+
+        for device in data:
+            device_id = device.get("device_id")
+            for device_item in device_data:
+                if device_id == device_item.get("device_id"):
+                    if (device_item["quantity"] - device.get("quantity_return")) < 0:
+                        raise HTTPException(
+                            status_code=400, detail="Quantity return is invalid"
+                        )
+                    device_item["quantity_return"] = device.get("quantity_return")
+                    device_item["status"] = device.get("status")
+                    device_item["note"] = device.get("note")
+                    device_item["quantity_no_return"] = device_item.get(
+                        "quantity"
+                    ) - device.get("quantity_return")
+                    break
+
+        return device_data
+
     def update_device_borrowing(
         self,
         db: Session,
         device_borrowing_id: int,
         device_borrowing: DeviceBorrowingUpdate,
     ):
-        data = device_borrowing.dict()
-        self.device.validate_device(db, data.get("devices"))
-        self.user.validate_user(db, data.get("user_id"))
-        self.customer.validate_customer(db, data.get("customer_id"))
+        # validate device borrowing
+        data_device_borrowing = self.get_device_borrowing_by_id(db, device_borrowing_id)
 
-        data["devices"] = json.dumps(data["devices"])
+        if data_device_borrowing is None:
+            raise HTTPException(status_code=404, detail="Device borrowing not found")
+
+        if data_device_borrowing.is_returned is True:
+            raise HTTPException(
+                status_code=400, detail="Device borrowing is already returned"
+            )
+
+        data = device_borrowing.dict()
+
+        data_device = self.validate_device_return(
+            db, device_borrowing_id, data["devices"]
+        )
+
+        data["devices"] = json.dumps(data_device)
+
+        data["retired_date"] = datetime.datetime.now()
+
+        self.device.update_device_quantity_borrowing(db, data_device)
 
         db.query(DeviceBorrowing).filter(
             DeviceBorrowing.id == device_borrowing_id
         ).update(data)
+
         db.commit()
 
         return self.get_device_borrowing_by_id(db, device_borrowing_id)

@@ -16,6 +16,13 @@ class DevicesCreate(BaseModel):
     quantity: int
 
 
+class DevicesUpdate(BaseModel):
+    device_id: int
+    quantity_return: int
+    status: str
+    note: str
+
+
 class DeviceBorrowingSchema(BaseModel):
     id: int
     name: str
@@ -39,5 +46,6 @@ class DeviceBorrowingCreate(BaseModel):
     returning_date: str = "2024-01-01 00:00:00"
 
 
-class DeviceBorrowingUpdate(DeviceBorrowingCreate):
-    is_returned: bool
+class DeviceBorrowingUpdate(BaseModel):
+    devices: list[DevicesUpdate]
+    note: str

@@ -40,6 +40,19 @@ class DeviceService:
                 raise HTTPException(status_code=400, detail="Device is not active")
         return True
 
+    def update_device_quantity_borrowing(self, db: Session, devices: list):
+        for device in devices:
+            device_id = device.get("device_id")
+            quantity = device.get("quantity")
+            device_exist = self.get_device(db, device_id)
+            device_exist.total_used = device_exist.total_used - quantity
+            db.query(Device).filter(Device.id == device_id).update(
+                {"total_used": device_exist.total_used}
+            )
+
+        db.commit()
+        return True
+
     def update_device_quantity(
         self, db: Session, devices: list, is_borrowing: bool, is_returned: bool
     ):
