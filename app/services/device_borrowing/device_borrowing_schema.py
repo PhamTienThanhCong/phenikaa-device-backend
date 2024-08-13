@@ -9,6 +9,10 @@ from app.services.users.user_schema import UserBase
 class Devices(BaseModel):
     quantity: int
     device: DeviceCoreSchema
+    quantity_return: int = 0
+    quantity_no_return: int = 0
+    status: str = "borrowing"
+    note: str = ""
 
 
 class DevicesCreate(BaseModel):
