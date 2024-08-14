@@ -58,7 +58,7 @@ def create_device_borrowing(
     return device_service.create_device_borrowing(db, device_borrowing)
 
 
-@router.put("/{device_borrowing_id}")
+@router.put("/{device_borrowing_id}", response_model=DeviceBorrowingSchema)
 def return_device_borrowing(
     device_borrowing_id: int,
     device_borrowing: DeviceBorrowingUpdate,
