@@ -217,6 +217,7 @@ class DeviceBorrowingService:
         data["devices"] = json.dumps(data_device)
 
         data["retired_date"] = datetime.datetime.now()
+        data["is_returned"] = True
 
         self.device.update_device_quantity_borrowing(db, data_device)
 
