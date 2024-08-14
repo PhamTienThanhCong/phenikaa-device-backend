@@ -1,5 +1,6 @@
 import datetime
 import json
+from typing import List
 from fastapi import HTTPException, UploadFile
 from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
@@ -162,7 +163,7 @@ class DeviceBorrowingService:
         return self.get_device_borrowing_by_id(db, device_borrowing.id)
 
     def validate_device_return(
-        self, db: Session, device_borrowing_id: int, data: list[DevicesUpdate]
+        self, db: Session, device_borrowing_id: int, data: List[DevicesUpdate]
     ):
         device_borrowing = (
             db.query(DeviceBorrowing)
@@ -171,7 +172,10 @@ class DeviceBorrowingService:
         )
         if not device_borrowing:
             raise HTTPException(status_code=404, detail="Device borrowing not found")
-        device_data = json.loads(device_borrowing.devices)
+        try:
+            device_data = json.loads(device_borrowing.devices)
+        except:
+            device_data = device_borrowing.devices
 
         for device in data:
             device_id = device.get("device_id")
@@ -187,6 +191,9 @@ class DeviceBorrowingService:
                     device_item["quantity_no_return"] = device_item.get(
                         "quantity"
                     ) - device.get("quantity_return")
+                    # nếu có key là device thì xóa key đó đi
+                    if "device" in device_item:
+                        del device_item["device"]
                     break
 
         return device_data
@@ -209,10 +216,8 @@ class DeviceBorrowingService:
             )
 
         data = device_borrowing.dict()
-
-        data_device = self.validate_device_return(
-            db, device_borrowing_id, data["devices"]
-        )
+        data_device = data["devices"]
+        data_device = self.validate_device_return(db, device_borrowing_id, data_device)
 
         data["devices"] = json.dumps(data_device)
 
