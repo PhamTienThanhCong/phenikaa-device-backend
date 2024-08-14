@@ -19,9 +19,9 @@ router = APIRouter(prefix="/device-borrowing", tags=["device-borrowing"])
 device_service = DeviceBorrowingService()
 
 
-@router.get("/health")
-def get_health():
-    return "OK"
+# @router.get("/health")
+# def get_health():
+#     return "OK"
 
 
 @router.get("")
@@ -31,6 +31,15 @@ def get_all_device_borrowing(
     limit: int = 100,
 ):
     return device_service.get_all_device_borrowing(db, skip, limit)
+
+
+@router.get("/report")
+def get_report_device_borrowing(
+    db: Session = Depends(get_db),
+    skip: int = 0,
+    limit: int = 100,
+):
+    return device_service.get_all_device_borrowing(db, skip, limit, True)
 
 
 @router.get("/{device_borrowing_id}", response_model=DeviceBorrowingSchema)
@@ -50,7 +59,7 @@ def create_device_borrowing(
 
 
 @router.put("/{device_borrowing_id}")
-def update_device_borrowing(
+def return_device_borrowing(
     device_borrowing_id: int,
     device_borrowing: DeviceBorrowingUpdate,
     db: Session = Depends(get_db),

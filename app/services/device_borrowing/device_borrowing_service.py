@@ -23,14 +23,26 @@ class DeviceBorrowingService:
         self.user = UserService()
         self.customer = CustomerService()
 
-    def get_all_device_borrowing(self, db: Session, skip: int = 0, limit: int = 100):
-        device_borrowings = (
-            db.query(DeviceBorrowing)
-            .order_by(DeviceBorrowing.created_at.desc())
-            .offset(skip)
-            .limit(limit)
-            .all()
-        )
+    def get_all_device_borrowing(
+        self, db: Session, skip: int = 0, limit: int = 100, check_returned: bool = False
+    ):
+        if check_returned is False:
+            device_borrowings = (
+                db.query(DeviceBorrowing)
+                .order_by(DeviceBorrowing.created_at.desc())
+                .offset(skip)
+                .limit(limit)
+                .all()
+            )
+        else:
+            device_borrowings = (
+                db.query(DeviceBorrowing)
+                .filter(DeviceBorrowing.is_returned == True)
+                .order_by(DeviceBorrowing.created_at.desc())
+                .offset(skip)
+                .limit(limit)
+                .all()
+            )
         user_ids = [device_borrowing.user_id for device_borrowing in device_borrowings]
         customer_ids = [
             device_borrowing.customer_id for device_borrowing in device_borrowings
