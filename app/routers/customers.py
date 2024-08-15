@@ -14,15 +14,22 @@ router = APIRouter(prefix="/customer", tags=["customers"])
 customer_service = CustomerService()
 
 
-@router.get("/health", response_model=str)
-def health():
-    return customer_service.get_health()
-
-
 # get all users
 @router.get("", response_model=list[CustomerBase])
 def get_all_users(limit: int = 10, offset: int = 0, db: Session = Depends(get_db)):
     return customer_service.get_all_users(db, limit, offset)
+
+
+# get all users
+@router.get("/student", response_model=list[CustomerBase])
+def get_all_student(limit: int = 10, offset: int = 0, db: Session = Depends(get_db)):
+    return customer_service.get_all_users(db, limit, offset, 1)
+
+
+# get all users
+@router.get("/lecturer", response_model=list[CustomerBase])
+def get_all_lecturer(limit: int = 10, offset: int = 0, db: Session = Depends(get_db)):
+    return customer_service.get_all_users(db, limit, offset, 2)
 
 
 # get user by id

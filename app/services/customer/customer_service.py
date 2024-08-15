@@ -34,7 +34,17 @@ class CustomerService:
         return new_user
 
     # get all users
-    def get_all_users(self, db: Session, limit: int = 100, offset: int = 0):
+    def get_all_users(
+        self, db: Session, limit: int = 100, offset: int = 0, account_type=None
+    ):
+        if account_type:
+            return (
+                db.query(Customer)
+                .filter(Customer.role == account_type)
+                .offset(offset)
+                .limit(limit)
+                .all()
+            )
         return db.query(Customer).offset(offset).limit(limit).all()
 
     # update user
