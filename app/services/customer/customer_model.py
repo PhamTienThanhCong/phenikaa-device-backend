@@ -9,7 +9,7 @@ class Customer(Base):
     role = Column(Integer, index=True)
     email = Column(String(100), index=True)
     full_name = Column(String(100), index=True)
-    avatar = Column(String(100), index=True, default="default.jpg")
+    avatar = Column(String(250), index=True, default="default.jpg")
     birth_date = Column(String(20), index=True)
     gender = Column(Integer, index=True)
     address = Column(String(100), index=True)
