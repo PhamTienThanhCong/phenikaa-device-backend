@@ -11,7 +11,6 @@ from app.routers import (
     rooms,
     room_bookings,
     notifies,
-    error,
     camera,
 )
 
@@ -31,7 +30,6 @@ def include_api_routes():
     router.include_router(customers.router)
     router.include_router(users.router)
     router.include_router(auth.router)
-    router.include_router(error.router)
 
 
 include_api_routes()
