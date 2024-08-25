@@ -16,8 +16,11 @@ class CameraService:
         pass
 
     __example_camera = [
-        "https://animalslife.net/videos_for/Hanoi_Pet_Rescue_(Vietnam)/anim_VietnamHanoi_1506502897_14779Trim_Part1.mp4",
-        "https://animalslife.net/videos_for/Pesaleidja_(Estonia)/anim_Pesa_1506401886_19271Trim_Part1.mp4",
+        "https://www.shutterstock.com/shutterstock/videos/1099731409/preview/stock-footage-view-from-security-cameras-in-business-center-woman-and-two-men-walk-in-corridor-workers-walking.webm4",
+        "https://www.shutterstock.com/shutterstock/videos/1099731473/preview/stock-footage-view-from-cctv-camera-in-business-center-office-room-turning-on-the-light-in-modern-school-room-or.webm",
+        "https://www.shutterstock.com/shutterstock/videos/1099731451/preview/stock-footage-view-from-cctv-cameras-at-flight-of-stairs-in-modern-business-center-colleagues-go-upstairs-to.webm",
+        "https://www.shutterstock.com/shutterstock/videos/1099731483/preview/stock-footage-view-from-cctv-camera-in-business-center-office-room-turning-on-lights-in-modern-school-room-or.webm",
+        "https://www.shutterstock.com/shutterstock/videos/3525668569/preview/stock-footage-aerial-view-of-people-inside-the-building-from-a-surveillance-camera.webm"
     ]
 
     def get_all(self, db: Session) -> CameraSchema:
