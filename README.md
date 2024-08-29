@@ -24,6 +24,11 @@ $ fastapi dev app/main.py
 $ pytest app/test/main.py
 ```
 
+- Deploment app
+```console
+$ fastapi main app/main.py
+```
+
 ### VS Code
 
 There are already configurations in place to run the backend through the VS Code debugger, so that you can use breakpoints, pause and explore variables, etc.
